@@ -3,29 +3,29 @@ const db = require("quick.db");
 const ms = require("parse-ms");
 
 module.exports.run = async (bot, message, args) => {
-  if(!message.content.startsWith('m!'))return;  
+  if(!message.content.startsWith('s.'))return;  
 
   let user = message.author;
 
   let timeout = 86400000;
-  let amount = 200;
+  let amount = 3000;
 
-  let daily = await db.fetch(`daily_${message.guild.id}_${user.id}`);
+  let daily = await db.fetch(`daily_${user.id}`);
 
   if (daily !== null && timeout - (Date.now() - daily) > 0) {
     let time = ms(timeout - (Date.now() - daily));
   
     let timeEmbed = new Discord.RichEmbed()
-    .setColor("#FFFFFF")
-    .setDescription(`<:Cross:618736602901905418> You've already collected your daily reward\n\nCollect it again in ${time.hours}h ${time.minutes}m ${time.seconds}s `);
+    .setColor("#2f3136")
+    .setDescription(`<:s_err:835971194887864342>・Você já coletou sua recompensa diária, Recolher novamente em ${time.hours} horas, ${time.minutes} minutos e ${time.seconds} segundos `);
     message.channel.send(timeEmbed)
   } else {
     let moneyEmbed = new Discord.RichEmbed()
-  .setColor("#FFFFFF")
-  .setDescription(`<:Check:618736570337591296> You've collected your daily reward of ${amount} coins`);
+  .setColor("#2f3136")
+  .setDescription(`<:s_yes:835971288118853664>・Você coletou sua recompensa diária de ${amount} coins`);
   message.channel.send(moneyEmbed)
-  db.add(`money_${message.guild.id}_${user.id}`, amount)
-  db.set(`daily_${message.guild.id}_${user.id}`, Date.now())
+  db.add(`money_${user.id}`, amount)
+  db.set(`daily_${user.id}`, Date.now())
 
 
   }
@@ -34,5 +34,5 @@ module.exports.run = async (bot, message, args) => {
 
 module.exports.help = {
   name:"daily",
-  aliases: ["day"]
+  aliases: ["diário", "diario"]
 }
