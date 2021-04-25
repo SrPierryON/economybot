@@ -7,61 +7,61 @@ module.exports.run = async (bot, message, args) => {
 
   let user = message.author;
 
-  let member = db.fetch(`money_${message.guild.id}_${user.id}`)
-  let member2 = db.fetch(`bank_${message.guild.id}_${user.id}`)
+  let member = db.fetch(`money_${user.id}`)
+  let member2 = db.fetch(`bank_${user.id}`)
 
   if (args[0] == 'all') {
-    let money = await db.fetch(`money_${message.guild.id}_${user.id}`)
-    let bank = await db.fetch(`bank_${message.guild.id}_${user.id}`)
+    let money = await db.fetch(`money_${user.id}`)
+    let bank = await db.fetch(`bank_${user.id}`)
 
     let embedbank = new Discord.RichEmbed()
-    .setColor('#FFFFFF')
-    .setDescription("<:Cross:618736602901905418> You don't have any money to deposit")
+    .setColor('#2f3136')
+    .setDescription("<:s_err:835971194887864342>・Você não tem dinheiro para depositar")
 
     if(money === 0) return message.channel.send(embedbank)
 
-    db.add(`bank_${message.guild.id}_${user.id}`, money)
-    db.subtract(`money_${message.guild.id}_${user.id}`, money)
+    db.add(`bank_${user.id}`, money)
+    db.subtract(`money_${user.id}`, money)
     let embed5 = new Discord.RichEmbed()
-  .setColor("#FFFFFF")
-  .setDescription(`<:Check:618736570337591296> You have deposited all your coins into your bank`);
+  .setColor("#2f3136")
+  .setDescription(`<:s_yes:835971288118853664>・Você depositou todas as seus coins em seu banco`);
   message.channel.send(embed5)
   
   } else {
   
   let embed2 = new Discord.RichEmbed()
-  .setColor("#FFFFFF")
-  .setDescription(`<:Cross:618736602901905418> Specify an amount to deposit`);
+  .setColor("#2f3136")
+  .setDescription(`<:s_err:835971194887864342>・Especifique um valor para depositar`);
   
   if (!args[0]) {
       return message.channel.send(embed2)
       .catch(err => console.log(err))
   }
   let embed3 = new Discord.RichEmbed()
-  .setColor("#FFFFFF")
-  .setDescription(`<:Cross:618736602901905418> You can't deposit negative money`);
+  .setColor("#2f3136")
+  .setDescription(`<:s_err:835971194887864342>・Você não pode depositar dinheiro negativo`);
 
   if (message.content.includes('-')) { 
       return message.channel.send(embed3)
   }
   let embed4 = new Discord.RichEmbed()
-  .setColor("#FFFFFF")
-  .setDescription(`<:Cross:618736602901905418> You don't have that much money`);
+  .setColor("#2f3136")
+  .setDescription(`<:s_err:835971194887864342>・Você não tem muito coins`);
 
   if (member < args[0]) {
       return message.channel.send(embed4)
   }
 
   let embed5 = new Discord.RichEmbed()
-  .setColor("#FFFFFF")
-  .setDescription(`<:Check:618736570337591296> You have deposited ${args[0]} coins into your bank`);
+  .setColor("#2f3136")
+  .setDescription(`<:s_yes:835971288118853664>・Você depositou ${args[0]} coins em seu banco`);
 
   message.channel.send(embed5)
-  db.add(`bank_${message.guild.id}_${user.id}`, args[0])
-  db.subtract(`money_${message.guild.id}_${user.id}`, args[0])
+  db.add(`bank_${user.id}`, args[0])
+  db.subtract(`money_${user.id}`, args[0])
   }
 }
 module.exports.help = {
   name:"deposit",
-  aliases: ["dep"]
+  aliases: ["dep", "depositar"]
 }
